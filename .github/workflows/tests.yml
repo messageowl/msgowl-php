@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [8.2, 8.3]
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Pint (code style)
+        run: vendor/bin/pint --test
+
+      - name: Run unit tests
+        run: vendor/bin/pest --testsuite=Unit --coverage --min=100
+
+      - name: Run integration tests
+        if: ${{ env.MESSAGEOWL_API_KEY != '' }}
+        run: vendor/bin/pest --testsuite=Integration --group=integration
+        env:
+          MESSAGEOWL_API_KEY: ${{ secrets.MESSAGEOWL_API_KEY }}
