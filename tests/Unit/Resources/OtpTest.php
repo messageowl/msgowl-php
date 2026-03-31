@@ -32,6 +32,19 @@ it('sends an otp with custom code and length', function () {
     expect($response->id)->toBe(2);
 });
 
+it('sends an otp with a custom timestamp', function () {
+    $client = $this->mockClient(200, [
+        'id'           => 3,
+        'phone_number' => '9609999999',
+        'timestamp'    => '2020-03-03T09:00:00.000000000Z',
+        'message_id'   => 1236,
+    ]);
+
+    $response = $client->otp()->send('9609999999', timestamp: '2020-03-03T09:00:00.000000000Z');
+
+    expect($response->id)->toBe(3);
+});
+
 it('resends an otp', function () {
     $client = $this->mockClient(200, [
         'id'           => 8,
