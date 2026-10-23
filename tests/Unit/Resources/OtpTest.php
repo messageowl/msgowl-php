@@ -45,6 +45,19 @@ it('sends an otp with a custom timestamp', function () {
     expect($response->id)->toBe(3);
 });
 
+it('sends an otp with an app hash', function () {
+    $client = $this->mockClient(200, [
+        'id'           => 4,
+        'phone_number' => '9609999999',
+        'timestamp'    => '2020-03-03T08:32:50.231979481Z',
+        'message_id'   => 1237,
+    ]);
+
+    $response = $client->otp()->send('9609999999', appHash: 'FA+9qCX9VSu');
+
+    expect($response->id)->toBe(4);
+});
+
 it('resends an otp', function () {
     $client = $this->mockClient(200, [
         'id'           => 8,
@@ -53,7 +66,7 @@ it('resends an otp', function () {
         'message_id'   => 1234,
     ]);
 
-    $response = $client->otp()->resend('9609999999', 8);
+    $response = $client->otp()->resend('9609999999', 8, appHash: 'FA+9qCX9VSu');
 
     expect($response)->toBeInstanceOf(OtpResponse::class)
         ->and($response->id)->toBe(8);

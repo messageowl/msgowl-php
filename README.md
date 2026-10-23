@@ -30,6 +30,10 @@ use MessageOwl\MessageOwl;
 $client = new MessageOwl('your-api-key');
 ```
 
+## Access Key Scopes
+
+Limit each access key to the scopes it needs: `account.balance.read`, `message.read`, `message.write`, `message.body.read`, `groups.manage`, `contacts.manage`, `sms_headers.read`. OTP endpoints require no scope.
+
 ## Authentication
 
 By default the SDK uses the `Authorization: AccessKey {key}` header. If headers are unavailable, switch to query param auth:
@@ -101,6 +105,9 @@ $otp = $client->otp()->send('9609999999');
 $otp = $client->otp()->send('9609999999', codeLength: 8);
 $otp = $client->otp()->send('9609999999', code: '235311');
 
+// Android SMS Retriever API (11-character app hash)
+$otp = $client->otp()->send('9609999999', appHash: 'FA+9qCX9VSu');
+
 echo $otp->id;
 echo $otp->phoneNumber;
 echo $otp->timestamp;
@@ -108,6 +115,7 @@ echo $otp->messageId;
 
 // Resend OTP
 $otp = $client->otp()->resend('9609999999', id: $otp->id);
+$otp = $client->otp()->resend('9609999999', id: $otp->id, appHash: 'FA+9qCX9VSu');
 
 // Verify OTP
 $result = $client->otp()->verify('9609999999', '235311');

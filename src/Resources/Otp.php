@@ -18,6 +18,7 @@ class Otp
         ?string $code = null,
         ?int $codeLength = null,
         ?string $timestamp = null,
+        ?string $appHash = null,
     ): OtpResponse {
         $body = ['phone_number' => $phone];
 
@@ -33,17 +34,27 @@ class Otp
             $body['timestamp'] = $timestamp;
         }
 
+        if ($appHash !== null) {
+            $body['app_hash'] = $appHash;
+        }
+
         $data = $this->http->post(Config::OTP_BASE_URL . '/send', $body);
 
         return OtpResponse::fromArray($data);
     }
 
-    public function resend(string $phone, int $id): OtpResponse
+    public function resend(string $phone, int $id, ?string $appHash = null): OtpResponse
     {
-        $data = $this->http->post(Config::OTP_BASE_URL . '/resend', [
+        $body = [
             'phone_number' => $phone,
             'id'           => $id,
-        ]);
+        ];
+
+        if ($appHash !== null) {
+            $body['app_hash'] = $appHash;
+        }
+
+        $data = $this->http->post(Config::OTP_BASE_URL . '/resend', $body);
 
         return OtpResponse::fromArray($data);
     }
