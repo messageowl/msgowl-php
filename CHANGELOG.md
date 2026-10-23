@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.1]
+
+### Changed
+- Re-release of 1.1.0 rebased onto the latest `main` (includes the PHP 8.4/8.5 CI matrix and test coverage fixes)
+
 ## [1.1.0]
 
 ### Added
